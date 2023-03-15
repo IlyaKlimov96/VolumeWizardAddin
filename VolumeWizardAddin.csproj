@@ -1,0 +1,64 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net40</TargetFramework>
+		<UseWPF>true</UseWPF>
+		<AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<BaseOutputPath></BaseOutputPath>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<Optimize>False</Optimize>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="Aveva.ApplicationFramework">
+			<HintPath>C:\Program Files (x86)\AVEVA\Everything3D2.10\Aveva.ApplicationFramework.dll</HintPath>
+		</Reference>
+		<Reference Include="Aveva.ApplicationFramework.Presentation">
+			<HintPath>C:\Program Files (x86)\AVEVA\Everything3D2.10\Aveva.ApplicationFramework.Presentation.dll</HintPath>
+		</Reference>
+		<Reference Include="Aveva.Core.Database">
+			<HintPath>C:\Program Files (x86)\AVEVA\Everything3D2.10\Aveva.Core.Database.dll</HintPath>
+		</Reference>
+		<Reference Include="Aveva.Core.Geometry">
+		  <HintPath>C:\Program Files (x86)\AVEVA\Everything3D2.10\Aveva.Core.Geometry.dll</HintPath>
+		</Reference>
+		<Reference Include="Aveva.Core.Presentation">
+		  <HintPath>C:\Program Files (x86)\AVEVA\Everything3D2.10\Aveva.Core.Presentation.dll</HintPath>
+		</Reference>
+		<Reference Include="Aveva.Core.Utilities">
+			<HintPath>C:\Program Files (x86)\AVEVA\Everything3D2.10\Aveva.Core.Utilities.dll</HintPath>
+		</Reference>
+		<Reference Include="PMLNet">
+		  <HintPath>C:\Program Files (x86)\AVEVA\Everything3D2.10\PMLNet.dll</HintPath>
+		</Reference>
+		<Reference Include="System.ComponentModel.Composition" />
+		<Reference Include="System.Windows.Forms">
+			<HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll</HintPath>
+		</Reference>
+		<Reference Include="WindowsFormsIntegration" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Settings.Designer.cs">
+	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Settings.settings</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>SettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
+	</ItemGroup>
+
+</Project>

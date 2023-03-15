@@ -1,0 +1,93 @@
+﻿<UserControl x:Class="VolumeWizardAddin.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VolumeWizardAddin"
+        mc:Ignorable="d"
+        Height="450" Width="800"
+        DataContext="{DynamicResource ListOfDRWG}">
+
+    <UserControl.Resources>
+        <local:ListOfDRWG x:Key="ListOfDRWG"/>
+    </UserControl.Resources>
+
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style TargetType="Button">
+                    <Setter Property="Height" Value="25"/>
+                    <Setter Property="Padding" Value="3,0,3,0"/>
+                </Style>
+            </Grid.Resources>
+
+            <Button Grid.Column="0" Content="CE" Command="Open" HorizontalAlignment="Stretch" 
+                    VerticalAlignment="Stretch" Margin="3" Width="40">
+                <Button.CommandBindings>
+                    <CommandBinding Command="Open" Executed="UpdateListOfDRWG" />
+                </Button.CommandBindings>
+            </Button>
+
+            <TextBlock Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Height="Auto" Width="Auto" 
+                        Margin="3,0,0,0">       
+                <Hyperlink Command="Open" CommandTarget="{Binding ElementName=CE_TextBlock}">
+                     <TextBlock x:Name="CE_TextBlock" Text="{Binding Name}">
+                        <TextBlock.CommandBindings>
+                            <CommandBinding Command="Open" Executed="SelectElement"/>
+                        </TextBlock.CommandBindings>
+                     </TextBlock>
+                </Hyperlink>
+            </TextBlock>
+            <WrapPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+                <Button Content="Создать чертеж" Command="Open" VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Left" Margin="3">
+                    <Button.CommandBindings>
+                        <CommandBinding Command="Open" Executed="CreateDRWG" CanExecute="ListOfDrwg_Created"/>
+                    </Button.CommandBindings>
+                </Button>
+                <Button Content="Создать объём" Command="Open" VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Left" Margin="3">
+                    <Button.CommandBindings>
+                        <CommandBinding CanExecute="ListOfDRWG_CanExecute" Command="Open" Executed="CreateMainVol"/>
+                    </Button.CommandBindings>
+                </Button>
+
+                <Button Content="Создать вид" Command="Open" VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Left" Margin="3">
+                    <Button.CommandBindings>
+                        <CommandBinding CanExecute="ListOfDRWG_CanExecute" Command="Open" Executed="CreateView"/>
+                    </Button.CommandBindings>
+                </Button>
+
+                <Button Content="Создать разрез" Command="Open" VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Left" Margin="3">
+                    <Button.CommandBindings>
+                        <CommandBinding CanExecute="ListOfDRWG_CanExecute" Command="Open" Executed="CreateSection"/>
+                    </Button.CommandBindings>
+                </Button>
+            </WrapPanel>
+
+        </Grid>
+
+        <ListView x:Name="ListOfDRWG_LV" Grid.Row="1" ItemsSource="{Binding GetList}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:DRWGCellPanel Height="100" HorizontalAlignment="Stretch" DataContext="{Binding}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

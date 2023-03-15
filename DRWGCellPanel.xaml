@@ -1,0 +1,201 @@
+﻿<UserControl x:Class="VolumeWizardAddin.DRWGCellPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:local="clr-namespace:VolumeWizardAddin" d:DataContext="{d:DesignInstance Type=local:DRWG}"
+             mc:Ignorable="d" 
+             Height="Auto" Width="Auto">
+    <GroupBox>
+        <GroupBox.Resources>
+            <Style TargetType="TextBlock">
+                <Setter Property="Margin" Value="3"/>
+            </Style>
+            <Style TargetType="TextBox">
+                <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
+                <EventSetter Event="KeyUp" Handler="TextBox_KeyUp"/>
+            </Style>
+            <Style TargetType="DataGridColumnHeader">
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+            </Style>
+            <x:Array Type="sys:String" x:Key="ListOfDirections">
+                <sys:String>N</sys:String>
+                <sys:String>E</sys:String>
+                <sys:String>S</sys:String>
+                <sys:String>W</sys:String>
+                <sys:String>U</sys:String>
+                <sys:String>D</sys:String>
+            </x:Array>
+        </GroupBox.Resources>
+
+        <GroupBox.Header>
+            <TextBox Width="250" Text="{Binding Name, UpdateSourceTrigger=Explicit}" FontWeight="Bold"/>
+        </GroupBox.Header>
+        <Grid HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Главный объем" HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Тип чертежа" HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Формат листа" HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Масштаб" HorizontalAlignment="Right"/>
+
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Name}" HorizontalAlignment="Left"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1"/>
+                        <ComboBox Grid.Row="2" Grid.Column="1"/>
+                        <ComboBox Grid.Row="3" Grid.Column="1"/>
+                    </Grid>
+
+                    <GroupBox Header="Позиция" Grid.Column="1">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="E" HorizontalAlignment="Center"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="N" HorizontalAlignment="Center"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="U" HorizontalAlignment="Center"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MainVol.PosX, UpdateSourceTrigger=Explicit}"
+                             HorizontalAlignment="Stretch"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MainVol.PosY, UpdateSourceTrigger=Explicit}"
+                             HorizontalAlignment="Stretch"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MainVol.PosZ, UpdateSourceTrigger=Explicit}" 
+                             HorizontalAlignment="Stretch"/>
+                        </Grid>
+                    </GroupBox>
+
+                    <GroupBox Header="Размеры" Grid.Column="2">
+                        <Grid Grid.Column ="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="X" HorizontalAlignment="Stretch"/>
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Y" HorizontalAlignment="Stretch"/>
+                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Z" HorizontalAlignment="Stretch"/>
+                            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding MainVol.LenXasString, UpdateSourceTrigger=Explicit}"
+                             HorizontalAlignment="Stretch"/>
+                            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding MainVol.LenYasString, UpdateSourceTrigger=Explicit}"
+                             HorizontalAlignment="Stretch"/>
+                            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MainVol.LenZasString, UpdateSourceTrigger=Explicit}"
+                             HorizontalAlignment="Stretch"/>
+
+                        </Grid>
+                    </GroupBox>
+
+                </Grid>
+            </Grid>
+
+            <Expander Header="Виды" Grid.Row="1">
+                <DataGrid x:Name="ViewsDataGrid" ItemsSource="{Binding Views}" AutoGenerateColumns="False" SelectionUnit="FullRow" SelectionMode="Extended">
+                    <DataGrid.CommandBindings>
+                        <CommandBinding Command="Delete" Executed="DeleteElement" CanExecute="Selected_CanExecute"/>
+                    </DataGrid.CommandBindings>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu>
+                                        <MenuItem Header="Удалить" Command="Delete"/>
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                        <DataGridTemplateColumn Header="Направление">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ComboBox 
+                                        IsEditable="True" 
+                                        ItemsSource="{DynamicResource ListOfDirections}"                                                               
+                                        Text="{Binding ViewDirection, UpdateSourceTrigger=LostFocus}"
+                                        LostFocus="ViewDirection_LostFocus"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Expander>
+
+            <Expander Header="Разрезы" Grid.Row="2">
+                <DataGrid ItemsSource="{Binding Sections}" AutoGenerateColumns="False">
+                    <DataGrid.CommandBindings>
+                        <CommandBinding Command="Delete" Executed="DeleteElement" CanExecute="Selected_CanExecute"/>
+                    </DataGrid.CommandBindings>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="ContextMenu">
+                                <Setter.Value>
+                                    <ContextMenu>
+                                        <MenuItem Header="Удалить" Command="Delete"/>
+                                    </ContextMenu>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Command="Delete">
+                                        <Button.Content>
+                                            <Bold Foreground="Red">X</Bold>
+                                        </Button.Content>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="Имя" Binding="{Binding Name}"/>
+                        <DataGridComboBoxColumn Header="Направление"  TextBinding="{Binding ViewDirection}" ItemsSource="{StaticResource ListOfDirections}"/>
+                        <DataGridTextColumn Header="E" Binding="{Binding PosX}"/>
+                        <DataGridTextColumn Header="N" Binding="{Binding PosY}"/>
+                        <DataGridTextColumn Header="U" Binding="{Binding PosZ}"/>
+                        <DataGridTextColumn Header="X" Binding="{Binding LenXasString}"/>
+                        <DataGridTextColumn Header="Y" Binding="{Binding LenYasString}"/>
+                        <DataGridTextColumn Header="Z" Binding="{Binding LenZasString}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Expander>
+        </Grid>
+    </GroupBox>
+</UserControl>

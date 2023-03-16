@@ -32,48 +32,48 @@ namespace VolumeWizardAddin
             ((ListOfDRWG)this.DataContext).Update();
         }
 
-        private void CreateMainVol(object sender, ExecutedRoutedEventArgs e)
-        {         
-           ((DRWG)this.DRWG_ListView.SelectedItem).CreateMain();
-        }
-
-        private void CreateDRWG(object sender, ExecutedRoutedEventArgs e)
-        {
-            ((ListOfDRWG)this.DataContext).Create();
-        }
-
-        private void ListOfDrwg_Created(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (((ListOfDRWG)this.DataContext).Element != null) e.CanExecute = true; else e.CanExecute = false;
-        }
-
-        private void CreateView(object sender, ExecutedRoutedEventArgs e)
-        {
-            ((DRWG)this.DRWG_ListView.SelectedItem).CreateView();
-        }
-
-        private void CreateSection(object sender, ExecutedRoutedEventArgs e)
-        {
-            ((DRWG)this.DRWG_ListView.SelectedItem).CreateSection();
-        }
-
-        private void SelectElement(object sender, ExecutedRoutedEventArgs e)
+        private void SelectElement_Command(object sender, ExecutedRoutedEventArgs e)
         {
             if (DbElement.Parse(((TextBlock)sender).Text, out DbElement element, out _)) CurrentElement.Element = element;
         }
 
         private void CreateElement_Command(object sender, ExecutedRoutedEventArgs e)
         {
-            
+            DRWG dRWG = ((DRWG)this.DRWG_ListView.SelectedItem);
+            switch ((string)e.Parameter)
+            {
+                case "DRWG":
+                    {
+                        ((ListOfDRWG)this.DataContext).Create();
+                        break;
+                    }
+                case "MainVolume":
+                    {
+                        dRWG.CreateMain();
+                        break;
+                    }
+                case "Section":
+                    {
+                        dRWG.CreateSection();
+                        break;
+                    }
+                case "View":
+                    {
+                        dRWG.CreateView();
+                        break;
+                    }
+            }
         }
 
-        private void DRWGSelected_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void DRWGPanel_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (this.DRWG_ListView.SelectedIndex != -1) e.CanExecute = true; else e.CanExecute = false;
+            if (DRWG_ListView.SelectedIndex != -1) e.CanExecute = true; else e.CanExecute = false;
+        }
+
+        private void DRWGListView_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (((ListOfDRWG)this.DataContext).Name != null) e.CanExecute = true; else e.CanExecute = false;
         }
     }
-
-
-
 
 }

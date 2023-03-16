@@ -5,11 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VolumeWizardAddin"
         mc:Ignorable="d"
-        Height="450" Width="800"
+        Height="Auto" Width="Auto"
         DataContext="{DynamicResource ListOfDRWG}">
 
     <UserControl.Resources>
         <local:ListOfDRWG x:Key="ListOfDRWG"/>
+        <CommandBinding x:Key="CreateElement_CommandBinding" Command="Open" Executed="CreateElement_Command" CanExecute="DRWGSelected_CanExecute"/>
     </UserControl.Resources>
 
     <Grid Margin="3">
@@ -52,42 +53,34 @@
                 </Hyperlink>
             </TextBlock>
             <WrapPanel Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
-                <Button Content="Создать чертеж" Command="Open" VerticalAlignment="Stretch" 
-                    HorizontalAlignment="Left" Margin="3">
-                    <Button.CommandBindings>
-                        <CommandBinding Command="Open" Executed="CreateDRWG" CanExecute="ListOfDrwg_Created"/>
-                    </Button.CommandBindings>
-                </Button>
-                <Button Content="Создать объём" Command="Open" VerticalAlignment="Stretch" 
-                    HorizontalAlignment="Left" Margin="3">
-                    <Button.CommandBindings>
-                        <CommandBinding CanExecute="ListOfDRWG_CanExecute" Command="Open" Executed="CreateMainVol"/>
-                    </Button.CommandBindings>
-                </Button>
 
-                <Button Content="Создать вид" Command="Open" VerticalAlignment="Stretch" 
+                <Button Content="Создать чертеж" Command="New" CommandParameter="{x:Type local:DRWG}" CommandTarget="{Binding ElementName=DRWG_ListView}" VerticalAlignment="Stretch" 
                     HorizontalAlignment="Left" Margin="3">
-                    <Button.CommandBindings>
-                        <CommandBinding CanExecute="ListOfDRWG_CanExecute" Command="Open" Executed="CreateView"/>
-                    </Button.CommandBindings>
                 </Button>
-
-                <Button Content="Создать разрез" Command="Open" VerticalAlignment="Stretch" 
+                <Button Content="Создать объём" Command="New" CommandParameter="{x:Type local:MainVolume}" CommandTarget="{Binding ElementName=DRWG_ListView}" VerticalAlignment="Stretch" 
                     HorizontalAlignment="Left" Margin="3">
-                    <Button.CommandBindings>
-                        <CommandBinding CanExecute="ListOfDRWG_CanExecute" Command="Open" Executed="CreateSection"/>
-                    </Button.CommandBindings>
+                </Button>
+                <Button Content="Создать вид" Command="New" CommandParameter="{x:Type local:View}" CommandTarget="{Binding ElementName=DRWG_ListView}" VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Left" Margin="3">
+                </Button>
+                <Button Content="Создать разрез" Command="New" CommandParameter="{x:Type local:Section}" CommandTarget="{Binding ElementName=DRWG_ListView}" VerticalAlignment="Stretch" 
+                    HorizontalAlignment="Left" Margin="3">
                 </Button>
             </WrapPanel>
 
         </Grid>
 
-        <ListView x:Name="ListOfDRWG_LV" Grid.Row="1" ItemsSource="{Binding GetList}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <local:DRWGCellPanel Height="100" HorizontalAlignment="Stretch" DataContext="{Binding}"/>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="80" Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <ListView x:Name="DRWG_ListView" Grid.Column="0" ItemsSource="{Binding GetList}" DisplayMemberPath="Name"/>
+            <local:DRWGCellPanel Grid.Column="1" DataContext="{Binding ElementName=DRWG_ListView, Path=SelectedItem}">
+                <local:DRWGCellPanel.CommandBindings>
+                    <CommandBinding Command="New" Executed="CreateElement_Command" CanExecute="DRWGSelected_CanExecute"/>
+                </local:DRWGCellPanel.CommandBindings>
+            </local:DRWGCellPanel>
+        </Grid>
     </Grid>
 </UserControl>

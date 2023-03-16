@@ -23,7 +23,7 @@ namespace VolumeWizardAddin
     {
         public DRWGCellPanel()
         {
-            InitializeComponent();
+            InitializeComponent();       
         }
 
         private void TextBox_KeyUp(object sender, KeyEventArgs e)
@@ -33,11 +33,6 @@ namespace VolumeWizardAddin
                 TextBox textBox = (TextBox)sender;
                 textBox.GetBindingExpression(TextBox.TextProperty).UpdateSource();
             }
-        }
-
-        private void LenTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            //if (!double.TryParse(e.Text, out _)) e.Handled = true;
         }
 
         private void ViewDirection_LostFocus(object sender, RoutedEventArgs e)
@@ -76,7 +71,7 @@ namespace VolumeWizardAddin
             textBox.GetBindingExpression(TextBox.TextProperty).UpdateTarget();
         }
 
-        private void Selected_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        public void DRWGSelected_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             DataGrid dataGrid = (DataGrid)sender;
             if (dataGrid.SelectedItems.Count > 0) e.CanExecute = true; else e.CanExecute = false;
@@ -84,12 +79,14 @@ namespace VolumeWizardAddin
 
         private void DeleteElement(object sender, ExecutedRoutedEventArgs e)
         {
+            RoutedUICommand applicationCommands = ApplicationCommands.Delete;
             DataGrid dataGrid = (DataGrid)sender;
+            string message = $"Вы действительно хотите удалить эти элементы ({dataGrid.SelectedItems.Count} шт.)?";
             switch (dataGrid.SelectedItem.GetType().Name)
             {
                 case "Section":
-                    {
-                        if (MessageBox.Show ("Удалить разрез?", "Удалиние разреза", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {                       
+                        if (MessageBox.Show (message, "Удалить", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
                             List<Section> element = dataGrid.SelectedItems.Cast<Section>().ToList();
                             foreach (Section item in element) item.Delete();
@@ -98,16 +95,14 @@ namespace VolumeWizardAddin
                     }
                 case "View":
                     {
-                        if (MessageBox.Show("Удалить вид?", "Удалиние вида", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                        if (MessageBox.Show(message, "Удалить", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
                         {
                             List<View> element = dataGrid.SelectedItems.Cast<View>().ToList();
                             foreach (View item in element) item.Delete();
                         }
                         break;
                     }
-            }
-            
-
+            }           
         }
     }
 }

@@ -7,6 +7,16 @@
              xmlns:local="clr-namespace:VolumeWizardAddin" d:DataContext="{d:DesignInstance Type=local:DRWG}"
              mc:Ignorable="d" 
              Height="Auto" Width="Auto">
+    <UserControl.Resources>
+        <x:Array Type="sys:String" x:Key="ListOfDirections">
+            <sys:String>N</sys:String>
+            <sys:String>E</sys:String>
+            <sys:String>S</sys:String>
+            <sys:String>W</sys:String>
+            <sys:String>U</sys:String>
+            <sys:String>D</sys:String>
+        </x:Array>
+    </UserControl.Resources>
     <GroupBox>
         <GroupBox.Resources>
             <Style TargetType="TextBlock">
@@ -19,14 +29,6 @@
             <Style TargetType="DataGridColumnHeader">
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
             </Style>
-            <x:Array Type="sys:String" x:Key="ListOfDirections">
-                <sys:String>N</sys:String>
-                <sys:String>E</sys:String>
-                <sys:String>S</sys:String>
-                <sys:String>W</sys:String>
-                <sys:String>U</sys:String>
-                <sys:String>D</sys:String>
-            </x:Array>
         </GroupBox.Resources>
 
         <GroupBox.Header>
@@ -38,8 +40,8 @@
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="150"/>
             </Grid.RowDefinitions>
 
             <Grid Grid.Row="0" Grid.ColumnSpan="2" Margin="0,0,0,2">
@@ -124,10 +126,10 @@
                 </Grid>
             </Grid>
 
-            <Expander Header="Виды" Grid.Row="1">
+            <GroupBox Header="Виды" Grid.Row="1">
                 <DataGrid x:Name="ViewsDataGrid" ItemsSource="{Binding Views}" AutoGenerateColumns="False" SelectionUnit="FullRow" SelectionMode="Extended">
                     <DataGrid.CommandBindings>
-                        <CommandBinding Command="Delete" Executed="DeleteElement" CanExecute="Selected_CanExecute"/>
+                        <CommandBinding Command="Delete" Executed="DeleteElement" CanExecute="DRWGSelected_CanExecute"/>
                     </DataGrid.CommandBindings>
                     <DataGrid.RowStyle>
                         <Style TargetType="{x:Type DataGridRow}">
@@ -155,12 +157,12 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-            </Expander>
+            </GroupBox>
 
-            <Expander Header="Разрезы" Grid.Row="2">
+            <GroupBox Header="Разрезы" Grid.Row="2">
                 <DataGrid ItemsSource="{Binding Sections}" AutoGenerateColumns="False">
                     <DataGrid.CommandBindings>
-                        <CommandBinding Command="Delete" Executed="DeleteElement" CanExecute="Selected_CanExecute"/>
+                        <CommandBinding Command="Delete" Executed="DeleteElement" CanExecute="DRWGSelected_CanExecute"/>
                     </DataGrid.CommandBindings>
                     <DataGrid.RowStyle>
                         <Style TargetType="{x:Type DataGridRow}">
@@ -168,6 +170,7 @@
                                 <Setter.Value>
                                     <ContextMenu>
                                         <MenuItem Header="Удалить" Command="Delete"/>
+                                        <MenuItem Header="Тест"/>
                                     </ContextMenu>
                                 </Setter.Value>
                             </Setter>
@@ -195,7 +198,7 @@
                         <DataGridTextColumn Header="Z" Binding="{Binding LenZasString}"/>
                     </DataGrid.Columns>
                 </DataGrid>
-            </Expander>
+            </GroupBox>
         </Grid>
     </GroupBox>
 </UserControl>

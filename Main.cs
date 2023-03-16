@@ -157,8 +157,29 @@ namespace VolumeWizardAddin
         }
         #endregion
 
-
         public MainVolume MainVol { get { return _main; } }
+
+        public void Create<T>()
+        {
+            switch (typeof(T).Name)
+            {
+                case "MainVolume":
+                    {
+                        CreateMain();
+                        break;
+                    }
+                case "Section":
+                    {
+                        CreateSection();
+                        break;
+                    }
+                case "View":
+                    {
+                        CreateView();
+                        break;
+                    }
+            }
+        }
 
         public void CreateMain()
         {
@@ -199,14 +220,6 @@ namespace VolumeWizardAddin
             view.OwnerDeleted += View_OwnerDeleted;
             Views.Add(view);
         }
-        public void DeleteView (View view)
-        {
-            try
-            {
-               view.Element.Delete();
-            }
-            catch { }
-        }
 
         public void CreateSection()
         {
@@ -230,7 +243,16 @@ namespace VolumeWizardAddin
             section.OwnerDeleted += Section_OwnerDeleted;
             Sections.Add(section);
         }
-        public void DeleteSection(Section section)
+
+        public void Delete(View view)
+        {
+            try
+            {
+                view.Element.Delete();
+            }
+            catch { }
+        }
+        public void Delete(Section section)
         {
             try
             {

@@ -34,12 +34,7 @@ namespace VolumeWizardAddin
 
         private void CreateMainVol(object sender, ExecutedRoutedEventArgs e)
         {         
-           ((DRWG)this.ListOfDRWG_LV.SelectedItem).CreateMain();
-        }
-
-        private void ListOfDRWG_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            if (this.ListOfDRWG_LV.SelectedIndex != -1) e.CanExecute = true ; else e.CanExecute = false;
+           ((DRWG)this.DRWG_ListView.SelectedItem).CreateMain();
         }
 
         private void CreateDRWG(object sender, ExecutedRoutedEventArgs e)
@@ -54,17 +49,27 @@ namespace VolumeWizardAddin
 
         private void CreateView(object sender, ExecutedRoutedEventArgs e)
         {
-            ((DRWG)this.ListOfDRWG_LV.SelectedItem).CreateView();
+            ((DRWG)this.DRWG_ListView.SelectedItem).CreateView();
         }
 
         private void CreateSection(object sender, ExecutedRoutedEventArgs e)
         {
-            ((DRWG)this.ListOfDRWG_LV.SelectedItem).CreateSection();
+            ((DRWG)this.DRWG_ListView.SelectedItem).CreateSection();
         }
 
         private void SelectElement(object sender, ExecutedRoutedEventArgs e)
         {
             if (DbElement.Parse(((TextBlock)sender).Text, out DbElement element, out _)) CurrentElement.Element = element;
+        }
+
+        private void CreateElement_Command(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
+
+        private void DRWGSelected_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            if (this.DRWG_ListView.SelectedIndex != -1) e.CanExecute = true; else e.CanExecute = false;
         }
     }
 

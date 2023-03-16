@@ -12,7 +12,7 @@ namespace VolumeWizardAddin
     {
         public string Name => "VolumeWizardAddin";
 
-        public string Description => "";
+        public string Description => "Аддон для создания объемов в моделе для выпуска чертежей";
 
         public void Start(ServiceManager serviceManager)
         {
@@ -40,8 +40,7 @@ namespace VolumeWizardAddin
             _wfControl.Controls.Add(new ElementHost() { Dock = DockStyle.Fill, Child = _wpfMainWindow});
 
             _dockedWindow = windowManager.CreateDockedWindow("VolumeWizardMainWindow", "VolumeWizard", _wfControl, DockedPosition.Floating);
-            _dockedWindow.SaveLayout = true;
-            //Properties.Settings.Default.Units = DbFormat.Create().Dimension.ToString();        
+            _dockedWindow.SaveLayout = true;     
         }
 
         public override void Execute()

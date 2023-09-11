@@ -1,0 +1,88 @@
+﻿<UserControl x:Class="VolumeWizardAddin.SizeAndPositionPanel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VolumeWizardAddin"
+             mc:Ignorable="d" 
+              d:DataContext="{d:DesignInstance Type=local:MainVolume}">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="5"/>
+            </Style.Setters>
+        </Style>
+        <Style TargetType="TextBox">
+            <EventSetter Event="LostFocus" Handler="TextBox_LostFocus"/>
+            <EventSetter Event="KeyUp" Handler="TextBox_KeyUp"/>
+        </Style>
+        <local:SelectedSideConvertor x:Key="SelectedSideConvertor"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <TextBox Grid.Row="0" Grid.Column="1" VerticalAlignment="Center"
+                                 Width="90" TextAlignment="Center" VerticalContentAlignment="Center" 
+                                 Text="{Binding TopSidePos}"/>
+        <TextBox Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" 
+                                 Width="90" TextAlignment="Right" VerticalContentAlignment="Center" 
+                                 Text="{Binding LeftSidePos}" HorizontalAlignment="Right"/>
+        <TextBox Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" 
+                                 Width="90" TextAlignment="Left" VerticalContentAlignment="Center" 
+                                 Text="{Binding RightSidePos}" HorizontalAlignment="Left"/>
+        <TextBox Grid.Row="2" Grid.Column="1" VerticalAlignment="Center"
+                                 Width="90" TextAlignment="Center" VerticalContentAlignment="Center" 
+                                 Text="{Binding BottomSidePos}"/>
+
+        <DockPanel Grid.Row="0" Grid.Column="0" Margin="0,0,5,0">
+            <TextBlock Text="▲" VerticalAlignment="Center" Margin="5,5,0,5" FontSize="17"
+                       Foreground ="{Binding BaseSideZ, Converter={StaticResource SelectedSideConvertor},
+               ConverterParameter={x:Static local:Side.Top_Right_Up}, Mode=TwoWay, FallbackValue=Gray}"
+                       MouseLeftButtonUp="Rect_MouseLeftButtonUp"/>
+            <TextBlock Text="U" VerticalAlignment="Center"/>
+            <TextBox Width="80" Text="{Binding UpSidePos}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        </DockPanel>
+
+        <DockPanel Grid.Row="3" Grid.Column="0" Margin="0,0,5,0">
+            <TextBlock Text="▼" VerticalAlignment="Center" Margin="5,5,0,5" FontSize="17"
+                       Foreground ="{Binding BaseSideZ, Converter={StaticResource SelectedSideConvertor},
+               ConverterParameter={x:Static local:Side.Bottom_Left_Down}, Mode=TwoWay, FallbackValue=Gray}"
+                       MouseLeftButtonUp="Rect_MouseLeftButtonUp"/>
+            <TextBlock Text="D" VerticalAlignment="Center"/>
+            <TextBox Width="80" Text="{Binding DownSidePos}" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+        </DockPanel>
+
+        <DockPanel LastChildFill="False" Grid.Row="1" Grid.Column="1" Margin="5" Width="80" Height="80">
+            <Rectangle DockPanel.Dock="Left" Stroke="{Binding BaseSideX,Converter={StaticResource SelectedSideConvertor},
+               ConverterParameter={x:Static local:Side.Bottom_Left_Down}, Mode=TwoWay, FallbackValue=Gray}" 
+                       Fill="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Stroke}" 
+                       Width="3" MouseLeftButtonUp="Rect_MouseLeftButtonUp"/>
+            <Rectangle DockPanel.Dock="Right" Stroke="{Binding BaseSideX, Converter={StaticResource SelectedSideConvertor},
+               ConverterParameter={x:Static local:Side.Top_Right_Up}, Mode=TwoWay, FallbackValue=Gray}" 
+                       Fill="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Stroke}" 
+                       Width="3" MouseLeftButtonUp="Rect_MouseLeftButtonUp"/>
+            <Rectangle DockPanel.Dock="Top" Stroke="{Binding BaseSideY, Converter={StaticResource SelectedSideConvertor},
+               ConverterParameter={x:Static local:Side.Top_Right_Up}, Mode=TwoWay, FallbackValue=Gray}" 
+                       Fill="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Stroke}" 
+                       Height="3" MouseLeftButtonUp="Rect_MouseLeftButtonUp"/>
+            <Rectangle DockPanel.Dock="Bottom" Stroke="{Binding BaseSideY, Converter={StaticResource SelectedSideConvertor},
+               ConverterParameter={x:Static local:Side.Bottom_Left_Down}, Mode=TwoWay, FallbackValue=Gray}" 
+                       Fill="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Stroke}" 
+                       Height="3" MouseLeftButtonUp="Rect_MouseLeftButtonUp"/>
+
+            <TextBlock DockPanel.Dock="Left" Text="E" VerticalAlignment="Center"/>
+            <TextBlock DockPanel.Dock="Right" Text="W" VerticalAlignment="Center"/>
+            <TextBlock DockPanel.Dock="Top" Text="N" HorizontalAlignment="Center"/>
+            <TextBlock DockPanel.Dock="Bottom" Text="S" HorizontalAlignment="Center"/>
+        </DockPanel>
+    </Grid>
+</UserControl>

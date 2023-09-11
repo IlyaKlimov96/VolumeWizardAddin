@@ -39,7 +39,7 @@ namespace VolumeWizardAddin
 
         private void CreateElement_Command(object sender, ExecutedRoutedEventArgs e)
         {
-            DRWG dRWG = ((DRWG)this.DRWG_ListView.SelectedItem);
+            DRWG dRWG = ((DRWG)this.DRWGListView.SelectedItem);
             switch ((string)e.Parameter)
             {
                 case "DRWG":
@@ -67,7 +67,7 @@ namespace VolumeWizardAddin
 
         private void DRWGPanel_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            if (DRWG_ListView.SelectedIndex != -1) e.CanExecute = true; else e.CanExecute = false;
+            if (DRWGListView.SelectedIndex != -1) e.CanExecute = true; else e.CanExecute = false;
         }
 
         private void DRWGListView_CanExecute(object sender, CanExecuteRoutedEventArgs e)

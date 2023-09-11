@@ -21,10 +21,10 @@ namespace VolumeWizardAddin
         public event EventHandler<DbElementChangesEventArgs> DbElementDeleted;
         public event EventHandler<DbElementChangesEventArgs> OwnerDeleted;
 
-        protected DbElement _element;
-        protected DbElement _owner;
+        protected DbElement _element, _owner;
         protected Position _position;
-        string _name;
+        protected string _name;
+        protected DbDoubleUnits _units;
 
         protected void PropChanged(string prop) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
 
@@ -54,13 +54,13 @@ namespace VolumeWizardAddin
                 _owner = Element.Owner;          
                 _name = _element.Name();
                 _position = _element.GetPosition(DbAttributeInstance.POS);
-
+                _units = DbDoubleUnits.GetUnits(DbDoubleUnits.GetUnits("mm").StandardUnits);
                 DbEvents.AddHandleUserChanges(ChangeEventHandler);
 
                 PropChanged(null);
             }
         }
-
+        public DbDoubleUnits Units => _units;
         public double PosX
         {
             get { return _position.X; }
@@ -108,24 +108,160 @@ namespace VolumeWizardAddin
             DbElementDeleted?.Invoke(this, new DbElementChangesEventArgs(_element));
         }
     }
+    
+    public enum Side
+    {
+        Top_Right_Up = 1, Bottom_Left_Down = -1
+    }
+
 
     public class MainVolume : Volume, INotifyPropertyChanged
     {
         protected DbDouble _lenX, _lenY, _lenZ;
+        protected DbDouble _topSidePos, _bottomSidePos, _leftSidePos, _rightSidePos, _upSidePos, _downSidePos;
+        protected Side _baseSideX = Side.Bottom_Left_Down;
+        protected Side _baseSideY = Side.Top_Right_Up;
+        protected Side _baseSideZ = Side.Top_Right_Up;
 
         public MainVolume(DbElement element) : base(element)
         {
             _lenX = _element.GetDbDouble(DbAttributeInstance.XLEN);
             _lenY = _element.GetDbDouble(DbAttributeInstance.YLEN);
             _lenZ = _element.GetDbDouble(DbAttributeInstance.ZLEN);
-            base.PropChanged("LenX");
-            base.PropChanged("LenY");
-            base.PropChanged("LenZ");
+            _topSidePos = DbDouble.Create(_position.Y + _element.GetDouble(DbAttributeInstance.YLEN) / 2, Units);
+            _bottomSidePos = DbDouble.Create(_position.Y - _element.GetDouble(DbAttributeInstance.YLEN) / 2, Units);
+            _leftSidePos = DbDouble.Create(_position.X - _element.GetDouble(DbAttributeInstance.XLEN) / 2, Units);
+            _rightSidePos = DbDouble.Create(_position.X + _element.GetDouble(DbAttributeInstance.XLEN) / 2, Units);
+            _upSidePos = DbDouble.Create(_position.Z + _element.GetDouble(DbAttributeInstance.ZLEN) / 2, Units);
+            _downSidePos = DbDouble.Create(_position.Z - _element.GetDouble(DbAttributeInstance.ZLEN) / 2, Units);
+            base.PropChanged(null);
         }
 
-        public string LenXunits => _lenX.Units.ShortName;
-        public string LenYunits => _lenY.Units.ShortName;
-        public string LenZunits => _lenZ.Units.ShortName;
+        public string TopSidePos
+        {
+            get { return _topSidePos.ToString(); }
+            set
+            {
+                try
+                {
+                    _topSidePos = DbDouble.Create(value);                    
+                    LenYasString = (_topSidePos - _bottomSidePos).ToString();
+                    PosY = _bottomSidePos.Value + LenY / 2;
+                    base.PropChanged("TopSidePos");
+                }
+                catch { }
+            }
+        }
+
+        public string BottomSidePos
+        {
+            get { return _bottomSidePos.ToString(); }
+            set
+            {
+                try
+                {
+                    _bottomSidePos  = DbDouble.Create(value);
+                    LenYasString = (_topSidePos - _bottomSidePos).ToString();
+                    PosY = _bottomSidePos.Value + LenY / 2;
+                    base.PropChanged("BottomSidePos");
+                }
+                catch { }
+            }
+        }
+
+        public string LeftSidePos
+        {
+            get { return _leftSidePos.ToString(); }
+            set
+            {
+                try
+                {
+                    _leftSidePos = DbDouble.Create(value);
+                    LenXasString = (_rightSidePos - _leftSidePos).ToString();
+                    PosX = _leftSidePos.Value + LenX / 2;
+                    base.PropChanged("LeftSidePos");
+                }
+                catch { }
+            }
+        }
+
+        public string RightSidePos
+        {
+            get { return _rightSidePos.ToString(); }
+            set
+            {
+                try
+                {
+                    _rightSidePos = DbDouble.Create(value);
+                    LenXasString = (_rightSidePos - _leftSidePos).ToString();
+                    PosX = _leftSidePos.Value + LenX / 2;
+                    base.PropChanged("RightSidePos");
+                }
+                catch { }
+            }
+        }
+
+        public string UpSidePos
+        {
+            get { return _upSidePos.ToString(); }
+            set
+            {
+                try
+                {
+                    _upSidePos = DbDouble.Create(value);
+                    LenZasString = (_upSidePos - _downSidePos).ToString();
+                    PosZ = _downSidePos.Value + LenZ / 2;
+                    base.PropChanged("UpSidePos");
+                }
+                catch { }
+            }
+        }
+
+        public string DownSidePos
+        {
+            get { return _downSidePos.ToString(); }
+            set
+            {
+                try
+                {
+                    _downSidePos = DbDouble.Create(value);
+                    LenZasString = (_upSidePos - _downSidePos).ToString();
+                    PosZ = _downSidePos.Value + LenZ / 2;
+                    base.PropChanged("DownSidePos");
+                }
+                catch { }
+            }
+        }
+
+        public Side BaseSideX
+        {
+            get { return _baseSideX; }
+            set
+            {
+                _baseSideX = value;
+                base.PropChanged("BaseSideX");
+            }
+        }
+
+        public Side BaseSideY
+        {
+            get { return _baseSideY; }
+            set
+            {
+                _baseSideY = value;
+                base.PropChanged("BaseSideY");
+            }
+        }
+
+        public Side BaseSideZ
+        {
+            get { return _baseSideZ; }
+            set
+            {
+                _baseSideZ = value;
+                base.PropChanged("BaseSideZ");
+            }
+        }
 
         public double LenX
         {
